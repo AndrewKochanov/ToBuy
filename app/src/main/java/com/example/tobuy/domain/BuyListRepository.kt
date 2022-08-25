@@ -1,8 +1,10 @@
 package com.example.tobuy.domain
 
+import androidx.lifecycle.LiveData
+
 interface BuyListRepository {
 
-    fun getBuyList(): List<BuyItem>
+    fun getBuyList(): LiveData<List<BuyItem>>
 
     fun getBuyItem(buyItemId: Int): BuyItem
 

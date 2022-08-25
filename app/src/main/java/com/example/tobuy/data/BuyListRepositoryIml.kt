@@ -1,15 +1,22 @@
 package com.example.tobuy.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.tobuy.domain.BuyItem
 import com.example.tobuy.domain.BuyListRepository
 
 object BuyListRepositoryIml : BuyListRepository {
 
+    private val buyListLD = MutableLiveData<List<BuyItem>>()
     private val buyList = mutableListOf<BuyItem>()
     private  var autoIncrementId = 0
 
-    override fun getBuyList(): List<BuyItem> {
-        return buyList.toList()
+
+    init {
+        for (i in 0 until 10){
+            val item = BuyItem(" Name $i", i, true)
+            addBuyItem(item)
+        }
     }
 
     override fun getBuyItem(buyItemId: Int): BuyItem {
@@ -23,10 +30,12 @@ object BuyListRepositoryIml : BuyListRepository {
             buyItem.id = autoIncrementId++
         }
         buyList.add(buyItem)
+        updateList()
     }
 
     override fun deleteBuyItem(buyItem: BuyItem) {
         buyList.remove(buyItem)
+        updateList()
     }
 
     override fun editBuyItem(buyItem: BuyItem) {
@@ -36,4 +45,11 @@ object BuyListRepositoryIml : BuyListRepository {
     }
 
 
+    override fun getBuyList(): LiveData<List<BuyItem>> {
+        return buyListLD
+    }
+
+    private fun updateList(){
+        buyListLD.value = buyList.toList()
+    }
 }
